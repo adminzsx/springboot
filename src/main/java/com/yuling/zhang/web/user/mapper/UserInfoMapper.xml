@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yuling.zhang.web.user.mapper.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.yuling.zhang.web.user.entity.UserInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="create_tiem" property="createTiem" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_name, user_account, password, create_tiem
+  </sql>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+    </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from user_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.yuling.zhang.web.user.entity.UserInfo">
+    insert into user_info (id, user_name, user_account, 
+      password, create_tiem)
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userAccount,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{createTiem,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.yuling.zhang.web.user.entity.UserInfo">
+        insert into user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="userAccount != null">
+                user_account,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="createTiem != null">
+                create_tiem,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userAccount != null">
+                #{userAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createTiem != null">
+                #{createTiem,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yuling.zhang.web.user.entity.UserInfo">
+        update user_info
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userAccount != null">
+                user_account = #{userAccount,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="createTiem != null">
+                create_tiem = #{createTiem,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yuling.zhang.web.user.entity.UserInfo">
+    update user_info
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_account = #{userAccount,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      create_tiem = #{createTiem,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
