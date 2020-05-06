@@ -55,4 +55,15 @@ public class UserInfo implements Serializable {
     public void setCreateTiem(Date createTiem) {
         this.createTiem = createTiem;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", userAccount='" + userAccount + '\'' +
+                ", password='" + password + '\'' +
+                ", createTiem=" + createTiem +
+                '}';
+    }
 }
