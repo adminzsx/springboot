@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration debug="false" scan="true" scanPeriod="300 seconds">
+	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+	<property name="logPath" value="C:/Users/ifnxs04/Desktop/upload" />
+	<!-- 彩色日志依赖的渲染类 -->
+	<conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+	<conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+	<conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+	<!-- 彩色日志格式 -->
+	<property name="consolePattern" value="${consolePattern:-%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}" />
+
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%level：级别，%thread表示线程名，%logger: Java类名，%msg：日志消息，%n是换行符-->
+			<pattern>${consolePattern}</pattern>
+		</encoder>
+	</appender>
+	<!-- 按照每天生成日志文件 -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/svr.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!--日志文件输出的文件名-->
+			<FileNamePattern>${logPath}/svr.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<!--日志文件保留天数-->
+			<MaxHistory>60</MaxHistory>
+			<!--日志文件最大的大小-->
+			<MaxFileSize>20MB</MaxFileSize>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%thread] [%logger{50}]:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="HTTP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/http.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${logPath}/http.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<MaxHistory>60</MaxHistory>
+			<MaxFileSize>20MB</MaxFileSize>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>[%thread] %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="HTTP_CALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/http-call.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!--日志文件输出的文件名-->
+			<FileNamePattern>${logPath}/http-call.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<!--日志文件保留天数-->
+			<MaxHistory>60</MaxHistory>
+			<!--日志文件最大的大小-->
+			<MaxFileSize>20MB</MaxFileSize>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<!--格式化输出：%d表示日期，%level：级别，%thread表示线程名，%logger: Java类名，%msg：日志消息，%n是换行符-->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %msg%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="TASK"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logPath}/task.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<FileNamePattern>${logPath}/task.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+			<MaxHistory>60</MaxHistory>
+			<MaxFileSize>20MB</MaxFileSize>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%thread] [%logger{50}]:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver" level="WARN"/>
+
+	<!-- 日志输出 -->
+	<springProfile name="local">
+		<root level="DEBUG">
+			<appender-ref ref="STDOUT" />
+		</root>
+		<logger name="org.springframework.jdbc.core.StatementCreatorUtils" level="TRACE" />
+		<logger name="org.springframework.jdbc.support.JdbcUtils" level="TRACE" />
+		<logger name="com.netflix" level="WARN" />
+		<logger name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" level="WARN" />
+		<logger name="org.apache.http" level="WARN" />
+		<logger name="taskLogger" level="INFO" additivity="false">
+			<appender-ref ref="STDOUT" />
+		</logger>
+		<logger name="httpRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="STDOUT" />
+		</logger>
+	</springProfile>
+	<springProfile name="dev">
+		<root level="INFO">
+			<appender-ref ref="FILE" />
+		</root>
+		<logger name="taskLogger" level="INFO" additivity="false">
+			<appender-ref ref="TASK" />
+		</logger>
+		<logger name="httpRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="HTTP" />
+		</logger>
+		<logger name="httpCallRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="HTTP_CALL" />
+		</logger>
+	</springProfile>
+	<springProfile name="test">
+		<root level="WARN">
+			<appender-ref ref="FILE" />
+		</root>
+		<logger name="taskLogger" level="INFO" additivity="false">
+			<appender-ref ref="TASK" />
+		</logger>
+		<logger name="httpRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="HTTP" />
+		</logger>
+		<logger name="httpCallRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="HTTP_CALL" />
+		</logger>
+	</springProfile>
+	<springProfile name="prod">
+		<root level="WARN">
+			<appender-ref ref="FILE" />
+		</root>
+		<logger name="taskLogger" level="INFO" additivity="false">
+			<appender-ref ref="TASK" />
+		</logger>
+		<logger name="httpRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="HTTP" />
+		</logger>
+		<logger name="httpCallRequestLogger" level="INFO" additivity="false">
+			<appender-ref ref="HTTP_CALL" />
+		</logger>
+	</springProfile>
+
+</configuration>

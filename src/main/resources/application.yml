@@ -3,10 +3,10 @@ server:
     context-path: /ling
   port: 8093
 logging:
-  level:
-    com.yuling.zhang: debug
-    org.springframework: info
+  config: classpath:logback-spring.xml
 spring:
+  profiles:
+    active: local
   servlet:
     multipart:
       enabled: true
