@@ -11,5 +11,11 @@ public class Test {
         System.out.println("hehhhllo");
         System.out.println("helhhhlo");
         System.out.println("helhhhlo");
+        System.out.println("1111");
+        System.out.println("hel111lo");
+        System.out.println("hell111o");
+        System.out.println("hel111lo");
+        System.out.println("hell111o");
+        System.out.println("hel1111lo");
     }
 }
