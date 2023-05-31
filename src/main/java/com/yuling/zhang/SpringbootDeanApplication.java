@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SpringbootDeanApplication {
 
     public static void main(String[] args) {
+        System.out.println();
         SpringApplication.run(SpringbootDeanApplication.class, args);
     }
 
